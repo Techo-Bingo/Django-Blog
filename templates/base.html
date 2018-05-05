@@ -1,0 +1,19 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>
+		{% block title %} {% endblock %}
+	</title>
+</head>
+<body>
+	{% include 'header.html' %}
+	{% block headmessage %} {% endblock %}
+	<hr>
+	<!--hr-->
+	{% block content %} {% endblock %}
+	<hr>
+	{% include 'footer.html' %}
+</body>
+</html>

@@ -19,7 +19,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from mainsite.views import homepage,showpost
+from mainsite.views import homepage,showpost,homepage_prev
 #import mainsite.views
 
 urlpatterns = [

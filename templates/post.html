@@ -1,17 +1,11 @@
-<html>
-<head>
-	<meta charset='utf-8'>
-	<title>
-		welcome to BinGo home
-	</title>
-</head>
-<body>
-	<h1>{{post.title}}</h1>
-	<hr>
-		<p style='font-family: 微软雅黑;font-size: 12pt;letter-spacing:2pt;'>
-		{{post.body}}</a>
-		</p>
-	<hr>
-	<h3><a href="/">回主页</a></h3>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %} {{post.title}} 文学天地 {% endblock %}
+{% block headmessage %}
+	<h3 style="font-family:微软雅黑;">{{post.title}}</h3>
+	<a style="font-family:微软雅黑;" href='/'>返回首页</a>
+{% endblock %}
+{% block content %}
+	<p style="font-family:微软雅黑;font-size:12pt;letter-spacing:2pt;">
+		{{post.body}}
+	</p>
+{% endblock %}

@@ -1,20 +1,12 @@
-<html>
-<head>
-	<meta charset='utf-8'>
-	<title>
-		welcome to BinGo home
-	</title>
-</head>
-<body>
-	<h1>欢迎光临我的博客</h1>
-	<hr>
+{% extends 'base.html' %}
+{% block title %} welcome to BinGo home {% endblock %}
+{% block headmessage %}
+	<h3 style='font-family: 楷体;'>    本站文章列表</a>
+{% endblock %}
+{% block content %}
 	{% for post in posts %}
-		<p style='font-family: 微软雅黑;font-size: 16pt;font-weight: bold;'>
-		</p>
-			<a href="/post/{{post.slug}}">{{post.title}}</a>
+		<p style="font-family:微软雅黑;font-size:14pt;font-weight:bold;">
+		<a href="/post/{{post.slug}}">{{post.title}}</a>
 		</p>
 	{% endfor %}
-	<hr>
-	<h3>现在时间：{{now}}</h3>
-</body>
-</html>
+{% endblock %}
