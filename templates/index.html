@@ -5,8 +5,22 @@
 {% endblock %}
 {% block content %}
 	{% for post in posts %}
-		<p style="font-family:微软雅黑;font-size:14pt;font-weight:bold;">
-		<a href="/post/{{post.slug}}">{{post.title}}</a>
-		</p>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<p style="font-family:微软雅黑;font-size:14pt;font-weight:bold;">
+					<a href="/post/{{post.slug}}">{{post.title}}</a>
+				</p>
+			</div>
+			<div class='panel-body' style='background-color:#ffffdd'>
+			<p>
+				{{ post.body | truncatechars:40 }}
+			</p>
+			</div>
+			<div class="panel-footer" style="background-color:#efefef">
+			<p>
+				发布时间: {{post.pub_date |date:"Y M d,h:m:s" }}
+			</p>
+		</div>
+		<br>
 	{% endfor %}
 {% endblock %}
