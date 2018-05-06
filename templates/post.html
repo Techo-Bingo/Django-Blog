@@ -6,6 +6,8 @@
 {% endblock %}
 {% block content %}
 	<p style="font-family:微软雅黑;font-size:12pt;letter-spacing:2pt;">
-		{{post.body}}
+		{{post.body |safe}}
 	</p>
 {% endblock %}
+
+
