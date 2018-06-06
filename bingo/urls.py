@@ -19,11 +19,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from mainsite.views import homepage,showpost,homepage_prev
+from mainsite.views import homepage,showpost,homepage_prev,about,listing
 #import mainsite.views
 
 urlpatterns = [
 	url(r'^$',homepage),
 	url(r'^post/(\w+)$',showpost),
     url(r'^admin/', admin.site.urls),
+    url(r'^about/', about),
+    url(r'^list/', listing),
 ]

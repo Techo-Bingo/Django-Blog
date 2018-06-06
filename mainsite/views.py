@@ -34,5 +34,50 @@ def showpost(request,slug):
 			return HttpResponse(html)
 	except:
 		return redirect('/')
+	
+def about(request):
+	html='''
+	<!DOCTYPE html>
+	<html>
+	<head><title>About Myself</title></head>
+	<body>
+	<h2>Li-Bin</h2>
+	<hr>
+	<p>
+	Hi, I am Li-Bin. Welcome to my blog !
+	</p>		
+	</body>
+	</html>
+	'''
+	return HttpResponse(html)
+
+def listing(request):
+	html='''
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<meta charset='utf-8'>
+	<title>博客文章列表</title>
+	</head>	
+	<body>
+	<h2>以下是我的博客列表</h2>
+	<hr>
+	<table width=400 border=1 bgcolor='#ccffcc'>
+	{}
+	</table>
+	</body>
+	</html>
+	'''
+	posts=Post.objects.all()
+	tags='<tr><td>序号</td><td>标题</td><td>时间</td></tr>'
+	for p in posts:
+		tags=tags + '<tr><td>{}</td>'.format(p.slug)
+		tags=tags + '<td>{}</td>'.format(p.title)
+		tags=tags + '<td>{}</td></tr>'.format(p.pub_date)
+
+	return HttpResponse(html.format(tags))
+
+
+
 
 
