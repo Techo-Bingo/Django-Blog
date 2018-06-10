@@ -19,7 +19,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from mainsite.views import homepage,showpost,homepage_prev,about,listing
+from mainsite.views import homepage,showpost,homepage_prev,about,listing,disp_detail
 #import mainsite.views
 
 urlpatterns = [
@@ -27,5 +27,6 @@ urlpatterns = [
 	url(r'^post/(\w+)$',showpost),
     url(r'^admin/', admin.site.urls),
     url(r'^about/', about),
-    url(r'^list/', listing),
+    url(r'^list/([0-9a-zA-Z]+)/$',disp_detail),
+    url(r'^list/$', listing),
 ]

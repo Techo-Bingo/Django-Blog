@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 from django.template.loader import get_template
 from django.shortcuts import render,redirect
 
-from django.http import HttpResponse
+from django.http import HttpResponse,Http404
 from datetime import datetime
 from .models import Post
+import random
 
 # Create your views here.
 
@@ -36,7 +37,7 @@ def showpost(request,slug):
 		return redirect('/')
 	
 def about(request):
-	html='''
+	'''
 	<!DOCTYPE html>
 	<html>
 	<head><title>About Myself</title></head>
@@ -49,10 +50,16 @@ def about(request):
 	</body>
 	</html>
 	'''
+	template = get_template('about.html')
+	quotes=['今日事，今日做',
+	'要收获，先付出',
+	'知识就是力量',
+	'个性就是命运']
+	html=template.render({'quote':random.choice(quotes)})
 	return HttpResponse(html)
 
 def listing(request):
-	html='''
+	'''
 	<!DOCTYPE html>
 	<html>
 	<head>
@@ -68,16 +75,41 @@ def listing(request):
 	</body>
 	</html>
 	'''
+	#tags='<tr><td>序号</td><td>标题</td><td>时间</td></tr>'
+	#for p in posts:
+	#	tags=tags + '<tr><td>{}</td>'.format(p.slug)
+	#	tags=tags + '<td>{}</td>'.format(p.title)
+	#	tags=tags + '<td>{}</td></tr>'.format(p.pub_date)
 	posts=Post.objects.all()
-	tags='<tr><td>序号</td><td>标题</td><td>时间</td></tr>'
-	for p in posts:
-		tags=tags + '<tr><td>{}</td>'.format(p.slug)
-		tags=tags + '<td>{}</td>'.format(p.title)
-		tags=tags + '<td>{}</td></tr>'.format(p.pub_date)
+	template = get_template('list.html')
+	html = template.render({'posts':posts})
+	return HttpResponse(html)
 
-	return HttpResponse(html.format(tags))
+def disp_detail(request,sku):
+	'''
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<meta charset='utf-8'>
+	<title>{}</title>
+	</head>	
+	<body>
+	<h2>{}</h2>
+	<hr>
+	<table width=400 border=1 bgcolor='#ccffcc'>
+	{}
+	</table>
+	<a href='/list'>返回列表</a>
+	</body>
+	</html>
+	'''
+	try:
+		p=Post.objects.get(slug=sku)
+	except Post.DoesNotExist:
+		raise Http404('找不到指定的博客')
 
-
-
-
+	template = get_template('disp.html')
+	html = template.render({'blog':p})
+	#return HttpResponse(html.format(p.title,p.title,tags))
+	return HttpResponse(html)
 

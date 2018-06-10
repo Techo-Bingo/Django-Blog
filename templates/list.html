@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+	<meta charset='utf-8'>
+	<title>博客文章列表</title>
+	</head>	
+	<body>
+	<h2>以下是我的博客列表</h2>
+	<hr>
+	<table width=400 border=1 bgcolor='#ccffcc'>
+		<tr><td>序号</td><td>标题</td><td>时间</td><td>文章</td></tr>
+	{% for p in posts %}
+		<tr>
+			<td>{{p.slug}}</td>
+			<td>{{p.title}}</td>
+			<td>{{p.pub_date}}</td>
+			<td>{{p.body}}</td>
+		</tr>
+	{% endfor %}
+	</table>
+	</body>
+	</html>
+
+
