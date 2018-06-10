@@ -18,11 +18,22 @@ def homepage_prev(request):
 		post_lists.append("<small>" +str(post.body.encode('utf-8'))+"</samll><br><br>")
 	return HttpResponse(post_lists)
 
+def bin_go(request):
+	template=get_template('index_prev.html')
+	posts=Post.objects.all()
+	now=datetime.now()
+	html=template.render(locals())
+	return HttpResponse(html)
 
 def homepage(request):
 	template=get_template('index.html')
 	posts=Post.objects.all()
 	now=datetime.now()
+	quotes=['今日事，今日做',
+	'要收获，先付出',
+	'知识就是力量',
+	'个性就是命运']
+	quote=random.choice(quotes)
 	html=template.render(locals())
 	return HttpResponse(html)
 
@@ -51,11 +62,12 @@ def about(request):
 	</html>
 	'''
 	template = get_template('about.html')
-	quotes=['今日事，今日做',
+	'''quotes=['今日事，今日做',
 	'要收获，先付出',
 	'知识就是力量',
-	'个性就是命运']
-	html=template.render({'quote':random.choice(quotes)})
+	'个性就是命运']'''
+	#html=template.render({'quote':random.choice(quotes)})
+	html=template.render()
 	return HttpResponse(html)
 
 def listing(request):
