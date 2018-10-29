@@ -19,14 +19,14 @@ def homepage_prev(request):
 	return HttpResponse(post_lists)
 
 def bin_go(request):
-	template=get_template('index_prev.html')
+	template=get_template('index.html')
 	posts=Post.objects.all()
 	now=datetime.now()
 	html=template.render(locals())
 	return HttpResponse(html)
 
 def homepage(request):
-	template=get_template('index.html')
+	template=get_template('index_prev.html')
 	posts=Post.objects.all()
 	now=datetime.now()
 	quotes=['今日事，今日做',

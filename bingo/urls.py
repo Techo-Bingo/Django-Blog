@@ -23,8 +23,8 @@ from mainsite.views import *
 #import mainsite.views
 
 urlpatterns = [
-	url(r'^$',homepage),
-    url(r'^bin/$',bin_go),
+	url(r'^$',bin_go),
+    url(r'^bin/$',homepage),
 	url(r'^post/(\w+)$',showpost),
     url(r'^admin/', admin.site.urls),
     url(r'^about/', about),
