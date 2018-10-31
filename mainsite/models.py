@@ -14,7 +14,7 @@ class Post(models.Model):
 	
 	
 	class Meta:
-		ordering=('-pub_date',)
+		ordering=('-slug',)
 
 	def __unicode__(self):
 		return self.title
