@@ -48,73 +48,22 @@ def showpost(request,slug):
 		return redirect('/')
 	
 def about(request):
-	'''
-	<!DOCTYPE html>
-	<html>
-	<head><title>About Myself</title></head>
-	<body>
-	<h2>Li-Bin</h2>
-	<hr>
-	<p>
-	Hi, I am Li-Bin. Welcome to my blog !
-	</p>		
-	</body>
-	</html>
-	'''
 	template = get_template('about.html')
-	'''quotes=['今日事，今日做',
+	quotes=['今日事，今日做',
 	'要收获，先付出',
 	'知识就是力量',
-	'个性就是命运']'''
-	#html=template.render({'quote':random.choice(quotes)})
-	html=template.render()
+	'个性就是命运']
+	html=template.render({'quote':random.choice(quotes)})
+	#html=template.render()
 	return HttpResponse(html)
 
 def listing(request):
-	'''
-	<!DOCTYPE html>
-	<html>
-	<head>
-	<meta charset='utf-8'>
-	<title>博客文章列表</title>
-	</head>	
-	<body>
-	<h2>以下是我的博客列表</h2>
-	<hr>
-	<table width=400 border=1 bgcolor='#ccffcc'>
-	{}
-	</table>
-	</body>
-	</html>
-	'''
-	#tags='<tr><td>序号</td><td>标题</td><td>时间</td></tr>'
-	#for p in posts:
-	#	tags=tags + '<tr><td>{}</td>'.format(p.slug)
-	#	tags=tags + '<td>{}</td>'.format(p.title)
-	#	tags=tags + '<td>{}</td></tr>'.format(p.pub_date)
 	posts=Post.objects.all()
 	template = get_template('list.html')
 	html = template.render({'posts':posts})
 	return HttpResponse(html)
 
 def disp_detail(request,sku):
-	'''
-	<!DOCTYPE html>
-	<html>
-	<head>
-	<meta charset='utf-8'>
-	<title>{}</title>
-	</head>	
-	<body>
-	<h2>{}</h2>
-	<hr>
-	<table width=400 border=1 bgcolor='#ccffcc'>
-	{}
-	</table>
-	<a href='/list'>返回列表</a>
-	</body>
-	</html>
-	'''
 	try:
 		p=Post.objects.get(slug=sku)
 	except Post.DoesNotExist:

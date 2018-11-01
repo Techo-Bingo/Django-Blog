@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} welcome to BinGo home {% endblock %}
 {% block headmessage %}
-	<h3 style='font-family: 楷体;'>    本站文章列表</h3>
+	<h3 style='font-family: 楷体;'>    本站文章内容</h3>
 {% endblock %}
 {% block content %}
 	{% for post in posts %}
@@ -13,7 +13,7 @@
 			</div>
 			<div class='panel-body' style='background-color:#ffffdd'>
 			<p>
-				{{ post.body | truncatechars:40 }}
+				{{ post.body | truncatechars:200  | linebreaksbr }}
 			</p>
 			</div>
 			<div class="panel-footer" style="background-color:#efefef">
