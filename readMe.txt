@@ -1583,6 +1583,61 @@ def MainInit():
 	main.protocol("WM_DELETE_WINDOW", main.close_window)
 	main.mainloop()
 
+=============== my_logger.py
+# -*- coding: UTF-8 -*-
+__author__ = 'libin'
+
+import os
+#import pwd
+import time
+
+
+class Logger(object):
+	"""
+	即开即写，亲测比logging性能高，
+	且日志回滚裁剪不影响日志写入
+	usage:  log = Logger('aaa.log')
+			log.info('info.....')
+	"""
+	def __init__(self, filepath):
+		self.log_level = 'info'
+		self.log_file = filepath
+		with open(filepath, 'w') as f:
+			f.write('log file init\n')
+
+	@classmethod
+	def _get_time(cls):
+		ct = time.time()
+		msec = (ct - int(ct)) * 1000
+		return '%s.%03d' % (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), msec)
+
+	def _write_append(self, infos):
+		try:
+			with open(self.log_file, 'a+') as f:
+				f.write(infos + '\n')
+				return True
+		except:
+			return False
+
+	def modify_level(self,level='info'):
+		if not level:
+			self.log_level = 'info'
+		elif level in ['debug','info','error']:
+			self.log_level = level
+
+	def info(self, info):
+		if self.log_level == 'error': return
+		self._write_append('[INFO ] %s (%s): %s' % (self._get_time(), os.getpid(), info))
+
+	def warn(self, info):
+		self._write_append('[WARN ] %s (%s): %s' % (self._get_time(), os.getpid(), info))
+
+	def error(self, info):
+		self._write_append('[ERROR] %s (%s): %s' % (self._get_time(), os.getpid(), info))
+
+	def debug(self, info):
+		if self.log_level != 'debug': return
+		self._write_append('[DEBUG] %s (%s): %s' % (self._get_time(), os.getpid(), info))
 
 
 
