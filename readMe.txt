@@ -226,6 +226,499 @@ class GuiMain(tk.Tk):
 			self.rightwin.destroy()
 			self.rightwin = None
 		
+================ my_page.py
+#-*- coding: UTF-8 -*-
+
+import tkinter as tk
+import tkinter.ttk as ttk
+#from tkinter.ttk import Combobox, Notebook, Style
+from my_common import Globals,Common
+from my_base import Pager
+from my_module import ProgressBar
+
+
+class StatePage(Pager):
+	def __init__(self, master, iplist):
+		self.master = master
+		self.ip_list = iplist
+		self.lab_width = 20
+		self.ip_width = 16
+		self.font = Globals.font()
+		self.ip_state_dict = {}
+		self.opt_dict = {	1: "项目  \  IP地址",
+							2: "主备模式",
+							3: "运行状态",
+							4: "MRS容灾模式",
+							5: "灾备对端IP",
+							6: "keepalived状态",
+							7: "MySQL运行状态",
+							8: "MySQL同步状态",
+							9: "文件同步状态",
+							10: "与对端SSH互信状态",
+							11: "浮动IP状态",
+							12: "主备容灾告警"
+						}
+
+	def stepper(self):
+		self.pack_frame()
+
+	def pack_frame(self):
+		# 占位用 
+		#tk.Label(self.frame, height=5, bg='Gray90').grid(row=0, column=0)
+		column, row = len(self.ip_list), len(self.opt_dict)
+		for seq, name in self.opt_dict.items():
+			tk.Label(self.frame, text=name, width=self.lab_width, \
+				font=('-*-%s-*-*-*--*-140-*') % (self.font), bg='Gray80'\
+				).grid(row=seq, column=0, padx=1, pady=1)
+		for ip in self.ip_list:
+			tk.Label(self.frame, text=ip, width=self.ip_width, \
+				font=('-*-%s-*-*-*--*-140-*') % (self.font), bg='Gray80'\
+				).grid(row=1, column=self.ip_list.index(ip)+1, padx=1, pady=1)
+		for y in range(1, column+1):
+			sub_list = []
+			for x in range(2, row+1):	
+				lab = tk.Label(self.frame, width=self.ip_width, \
+					font=('-*-%s-*-*-*--*-120-*') % (self.font), bg='Snow')
+				lab.grid(row=x, column=y)
+				sub_list.append(lab)
+			self.ip_state_dict[self.ip_list[y-1]] = sub_list
+		#print(self.ip_state_dict)
+
+	def fill_data(self, ip_dict):
+		''' 单个IP填充，不影响其他IP '''
+		ip, = ip_dict
+		state_list, = ip_dict.values()
+		if ip not in self.ip_state_dict:
+			return 
+		index = 0
+		for lab in self.ip_state_dict[ip]:
+			state = state_list[index]
+			if state == 'NA':
+				lab['fg'] = 'Black'
+			elif state == 'Fail':
+				lab['fg'] = 'Red'
+			else:
+				lab['fg'] = 'MediumBlue'
+			lab['text'] = state
+			index += 1
+
+	@classmethod
+	def parse_state_data(cls, data_str):
+		out_list = []
+		for key in ['HA_MODE', 'HA_STATUS', 'MRS_HA_MODE', 'REMOTE_IP',\
+		'KEEPALIVED_STATUS', 'MYSQL_STATUS', 'MYSQL_SYNC', 'FILE_SYNC',\
+		'SSH_TRUST', 'VIP_STATUS', 'HA_ALARM']:
+			out_list.append(Common.find_val_in_str(data_str, key))
+		return tuple(out_list)
+
+
+
+class BinlogPage(Pager):
+	def __init__(self, master, iplist, start_cmd):
+		self.master = master
+		self.ip_list = iplist
+		self.start_cmd = start_cmd
+
+	def stepper(self):
+		self.pack_frame()
+
+	def start_cmd_wrapper(self, index, combo, prog):
+		day_str = combo.get()
+		if day_str == '一天':
+			days = 1
+		elif day_str == '三天':
+			days = 3
+		elif day_str == '七天':
+			days = 7
+		else:
+			days = 1
+		self.start_cmd(index, days, prog)
+
+	def pack_frame(self):
+		for x in range(len(self.ip_list)):
+			# 进度条 
+			prog = ProgressBar(self.frame, self.ip_list[x],width=40, row=x)
+			prog.update(0.0)
+			# 下拉框 (选择天数)
+			combo = ttk.Combobox(self.frame, width=6)
+			combo['values'] = ('一天', '三天', '七天')
+			combo.current(0)
+			combo['state'] = 'readonly'
+			combo.grid(row=x, column=2, padx=5)
+			# 开始按钮
+			tk.Button(self.frame, text='开始获取', command= \
+				lambda index=x, combo=combo, prog=prog: \
+				self.start_cmd_wrapper(index, combo, prog)).\
+				grid(row=x, column=3, padx=5, pady=8)
+
+
+class HAlogPage(Pager):
+	def __init__(self, master, iplist, start_cmd):
+		self.master = master
+		self.ip_list = iplist
+		self.start_cmd = start_cmd
+
+	def stepper(self):
+		self.pack_frame()
+
+	def start_cmd_wrapper(self, index, prog):
+		self.start_cmd(index, prog)
+
+	def pack_frame(self):
+		for x in range(len(self.ip_list)):
+			# 进度条 
+			prog = ProgressBar(self.frame, self.ip_list[x],width=40, row=x)
+			prog.update(0.0)
+			# 开始按钮
+			tk.Button(self.frame, text='开始获取', command= \
+				lambda index=x, prog=prog: self.start_cmd_wrapper\
+				(index, prog)).grid(row=x, column=3, padx=5, pady=8)
+
+
+class OtherLogPage(Pager):
+	def __init__(self, master, iplist):
+		self.master = master
+		self.ip_list = iplist
+		self.font = Globals.font()
+		self.log_type = (	'== 以下所有 ==',
+							'数据库日志    (eappmysql.err)',
+							'操作系统日志  (messages)',
+							'eApp操作日志  (TBL_UserLog)',
+							'deploy文件    (deploy_proxy_4.0.xml)',
+							'版本信息文件  (version.mdc.ini)'
+						)
+
+	def pack_frame(self):
+		path_fm = tk.LabelFrame(self.frame)
+		oper_fm = tk.LabelFrame(self.frame)
+		path_fm.pack()
+		oper_fm.pack()
+		tk.Label(path_fm, text=' 日志路径： ', font=('-*-%s-*-*-*--*-160-*') %\
+			(self.font)).grid(row=0, column=0)
+		self.path_en = tk.Entry(path_fm, font=('-*-%s-*-*-*--*-160-*') %\
+			(self.font), width=68)
+		self.path_en.grid(row=0, column=1, pady=10)
+		tk.Label(path_fm, text=' 其他日志： ', font=('-*-%s-*-*-*--*-160-*') %\
+			(self.font)).grid(row=1, column=0)
+		self.type_en = ttk.Combobox(path_fm, font=('-*-%s-*-*-*--*-160-*') %\
+			(self.font), width=66, state='readonly', values=self.log_type)
+		self.type_en.grid(row=1, column=1, pady=10)
+		self.progress = ProgressBar(oper_fm, '进度:', width=40)
+		choose_ip = tuple(['--- 请选择IP ---'] + self.ip_list)
+		self.ipchoo_en = ttk.Combobox(oper_fm, font=('-*-%s-*-*-*--*-160-*') %\
+			(self.font), width=16, state='readonly', values=choose_ip)
+		self.ipchoo_en.current(0)
+		self.ipchoo_en.grid(row=1, column=2, padx=13)
+		self.start_btn = tk.Button(oper_fm, font=('-*-%s-*-*-*--*-160-*') %\
+		(self.font), text=' 开始采集 ', width=18, command=self.collect_start)
+		self.start_btn.grid(row=1, column=3, pady=10)
+
+	def stepper(self):
+		self.pack_frame()
+
+	def collect_start(self, event=None):
+		pass
+		#Common.test_func()
+
+	def destroy(self):
+		self.frame.destroy()
+
+
+if __name__ == '__main__':
+	class ROOT(tk.Tk):
+		@classmethod
+		def callback(cls, x, y):
+			print('callback:', x, y)
+
+		def __init__(self):
+			tk.Tk.__init__(self)
+
+			fm = tk.Frame(self, width=700, height=400, bg='Gray')
+			fm.pack()
+			fm1 = tk.Frame(self, width=700, height=100, bg='Gray70')
+			fm1.pack()
+			fm2 = tk.Frame(self, width=700, height=100, bg='Gray70')
+			fm2.pack()
+			fm3 = tk.Frame(self, width=700, height=100, bg='Gray70')
+			fm3.pack()
+
+			ip_list = ['10.160.154.23','10.160.155.68','10.160.151.141']
+			page = StatePage(fm, ip_list)
+			page.pack()
+			prog = ProgressBar(fm1, '进度: ', width=40)
+			prog.update(0.50, color=True)
+			binlog = BinlogPage(fm2, ip_list, self.callback)
+			binlog.pack()
+			log = OtherLogPage(fm3, ip_list)
+			log.pack()
+
+	def main():
+		root = ROOT()
+		root.mainloop()
+
+	main()
+
+================= my_handler.py
+#-*- coding: UTF-8 -*-
+
+import os
+import sys
+import base64
+from my_images import Images,Shells
+from my_logger import Logger
+from my_base import Handler,ExecError
+from my_common import Globals,Common,Cache
+from my_message import WinMsg,GuiTig,Checker,Tell
+from my_ssh import SSH,SSHUtil
+from my_page import StatePage,BinlogPage,HAlogPage
+
+
+class EnvUtil:
+	@classmethod
+	def init(cls):
+		basedir = Globals.get_basedir()
+		cls.dir_init(basedir)
+		cls.image_init(basedir)
+		cls.pack_init(basedir)
+		cls.log_init(basedir)
+
+	@classmethod
+	def log_init(cls, basedir):
+		return  Logger('\\'.join([basedir, 'get_binlog.log']))
+
+	@classmethod
+	def dir_init(cls, basedir):
+		if not os.path.exists(basedir):
+			os.makedirs(basedir)
+		if not os.path.exists('\\'.join([basedir, 'image'])):
+			os.makedirs('\\'.join([basedir, 'image']))
+		if not os.path.exists('\\'.join([basedir, 'cmds'])):
+			os.makedirs('\\'.join([basedir, 'cmds']))
+		Cache.execute_dir(dir=os.path.split(sys.argv[0])[0])
+
+	@classmethod
+	def image_init(cls, basedir):
+		imgdir = '\\'.join([basedir, 'image'])
+		if not os.path.exists('\\'.join([imgdir, 'item.ico'])):
+			file_str = open('\\'.join([imgdir, 'item.ico']), 'wb')
+			file_str.write(base64.b64decode(Images.item_str))
+			file_str.close()
+		if not os.path.exists('\\'.join([imgdir, 'eye.png'])):
+			file_str = open('\\'.join([imgdir, 'eye.png']), 'wb')
+			file_str.write(base64.b64decode(Images.eye_str))
+			file_str.close()
+		if not os.path.exists('\\'.join([imgdir, 'add.png'])):
+			file_str = open('\\'.join([imgdir, 'add.png']), 'wb')
+			file_str.write(base64.b64decode(Images.add_str))
+			file_str.close()
+		if not os.path.exists('\\'.join([imgdir, 'set.png'])):
+			file_str = open('\\'.join([imgdir, 'set.png']), 'wb')
+			file_str.write(base64.b64decode(Images.set_str))
+			file_str.close()
+		if not os.path.exists('\\'.join([imgdir, 'head.jpg'])):
+			file_str = open('\\'.join([imgdir, 'head.jpg']), 'wb')
+			file_str.write(base64.b64decode(Images.head_str))
+			file_str.close()
+
+	@classmethod
+	def pack_init(cls, basedir):
+		cmddir = '\\'.join([basedir, 'cmds'])
+		if not os.path.exists('\\'.join([cmddir, Globals.package()])):
+			file_str = open('\\'.join([cmddir, Globals.package()]), 'wb')
+			file_str.write(base64.b64decode(Shells.pack_str))
+			file_str.close()
+
+	@classmethod
+	def upload_package(cls):
+		Tell.tell_info('正在上传必要文件到服务器...')
+		for ip in Cache.get_logon_info():
+			ssh_inst = Cache.get_ssh_instance(ip)
+			pack_path = '\\cmds\\'.join([Globals.get_basedir(), Globals.package()])
+			remote_path = '/'.join([Globals.server_dir(), Globals.package()])
+			# 上传package并解压
+			cls.upload_and_uncompress(ip, ssh_inst, pack_path, remote_path)
+
+	@classmethod
+	def upload_and_uncompress(cls, ip, ssh_inst, pack_path, remote_path):
+		try:
+			# 如果上次登录用户跟这次不一致，会导致后面解压失败 
+			# 这里刚登录时，每次清空目录
+			SSHUtil.exec_ret(ssh_inst, 'rm -rf %s/*' % (Globals.server_dir()))
+
+			if not SSHUtil.upload_file(ssh_inst, pack_path, remote_path):
+				raise ExecError('上传package.7z失败')
+			cmd = 'cd %s && /usr/local/bin/7za x %s -aoa' % \
+			(Globals.server_dir(), remote_path)
+			# 成功返回0
+			if SSHUtil.exec_ret(ssh_inst, cmd):
+				raise ExecError('解压package.7z失败')
+			Tell.tell_info('%s 必要文件准备成功' % (ip))
+			Cache.add_prepare_ip(ip)
+		except ExecError as e:
+			Tell.tell_info('%s 必要文件准备失败: %s' % (ip, e))
+			Cache.del_prepare_ip(ip)
+
+	@classmethod
+	def collect_state_thread(cls, callback_fill_data):
+		period = 5
+		while not Cache.exit_signal():
+			Common.sleep(period)
+			period = 30
+			cls.collect_server_state()
+			callback_fill_data()
+
+	@classmethod
+	def collect_server_state(cls):
+		for ip in Cache.get_prepare_ip():
+			data_str = SSHUtil.exec_info(Cache.get_ssh_instance(ip),
+								'/'.join([Globals.server_dir(), 
+								Globals.collect_state_sh()]), 
+								root=True
+							)
+			state_tuple = StatePage.parse_state_data(data_str)
+			Cache.set_ip_state_dict({ip: state_tuple})
+		#print(Cache.get_ip_state_dict())
+
+
+class LoginDealer(Handler):
+	def __init__(self, login_instance):
+		self.login_instance = login_instance
+		self.server_infos = {}
+
+	def try_login(self):
+		for seq, inst in self.login_instance.items():
+			ip = inst.ip_en.get()
+			user = inst.user_en.get()
+			upwd = inst.upwd_en.get()
+			rpwd = inst.rpwd_en.get()
+			if not Checker.check_input_ip(ip, inst.ip_en):
+				return False
+			if not Checker.check_input_user(user, inst.user_en):
+				return False
+			if not Checker.check_input_upwd(upwd, inst.upwd_en):
+				return False
+			if not Checker.check_input_rpwd(rpwd, inst.rpwd_en):
+				return False
+
+			inst.tig_login('LGING')
+			ssh = SSH(ip, user, upwd, rpwd)
+			if not SSHUtil.user_login(ssh, inst):
+				return False
+			if not SSHUtil.root_login(ssh, inst):
+				return False
+
+			# 登录成功，记录IP信息及ssh实例
+			Cache.add_ssh_instance(ip, ssh)
+
+			Cache.add_logon_info(ip, [user, upwd, rpwd])
+
+			inst.tig_login('SUCC')
+		return True
+
+	def stepper(self):
+		if not self.try_login():
+			Cache.del_ssh_instance('all')
+			Cache.del_logon_info('all')
+			return False
+		return True
+
+
+class PageDealer(object):
+	def __init__(self, master, view_rightwin):
+		self.master = master
+		self.view_rightwin = view_rightwin
+		self.current_index = 0
+		self.current_view = None
+		self.ip_list = list(Cache.get_logon_info().keys())
+
+	def init_page(self, index):
+		self.current_index = index
+		if self.current_view:
+			self.current_view.destroy()
+		if index == 1:
+			page = StatePage(self.master, self.ip_list)
+			page.pack()
+			self.current_view = page
+			# 数据填充在pack之后，且在后台进行
+			Common.create_thread(func=self.fill_state_data)
+		elif index == 2:
+			page = HAlogPage(self.master, self.ip_list, self.halog_start)
+			page.pack()
+		elif index == 3:
+			page = BinlogPage(self.master, self.ip_list, self.binlog_start)
+			page.pack()
+		elif index == 4:
+			WinMsg.info("敬请期待")
+			return
+		elif index == 5:
+			WinMsg.info("敬请期待")
+			return
+		elif index == 6:
+			WinMsg.info("敬请期待")
+			return
+		elif index == 7:
+			WinMsg.info("敬请期待")
+			return
+		else:
+			WinMsg.info("敬请期待")
+			return
+		self.current_view = page
+
+	def halog_start(self, index, prog):
+		Common.create_thread(func=self.get_halog, args=(index, prog))
+
+	def get_halog(self, index, prog):
+		prog.update(0.2)
+		Tell.tell_info('%s 正在获取主备日志...' % (self.ip_list[index]))
+		if not SSHUtil.template_shell_and_download(
+							Cache.get_ssh_instance(self.ip_list[index]),
+							prog,
+							'%s/%s' % (Globals.server_dir(), Globals.halog_sh()),
+							Cache.execute_dir(),
+							root=True):
+			Tell.tell_info('%s 获取主备日志失败，请确认是否为非单机模式' % \
+				(self.ip_list[index]), level='ERROR')
+		else: 
+			Tell.tell_info('%s 获取主备日志成功，文件在可执行程序目录下' % \
+				(self.ip_list[index]), level='TIG')
+
+	def binlog_start(self, index, days, prog):
+		Common.create_thread(func=self.get_binlog, args=(index, days, prog))
+
+	def get_binlog(self, index, days, prog):
+		prog.update(0.2)
+		Tell.tell_info('%s 正在获取%s天的Bin-log...' % (self.ip_list[index], days))
+		if not SSHUtil.template_shell_and_download(
+							Cache.get_ssh_instance(self.ip_list[index]),
+							prog,
+							'%s/%s %s' % (Globals.server_dir(), Globals.binlog_sh(), days),
+							Cache.execute_dir(),
+							root=True):
+			Tell.tell_info('%s 获取Bin-log失败，请确认是否为非单机模式' % \
+				(self.ip_list[index]), level='ERROR')
+		else: 
+			Tell.tell_info('%s 获取Bin-log成功，文件在可执行程序目录下' % \
+				(self.ip_list[index]), level='TIG')
+
+	def close_window(self):
+		self.destory()
+		
+	def fill_state_data(self):
+		if self.current_index != 2:
+			return
+		for ip, state_tuple in Cache.get_ip_state_dict().items():
+			self.current_view.fill_data({ip: state_tuple})
+
+	def after_login_deal(self):
+		Common.sleep(1)
+		# 上传必要文件
+		Common.create_thread(func=EnvUtil.upload_package)
+		# 定时收集服务器状态并显示 
+		Common.create_thread(func=EnvUtil.collect_state_thread, args=(self.fill_state_data,))
+
+
+
+
 
 
 
