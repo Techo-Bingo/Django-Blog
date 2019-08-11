@@ -839,6 +839,755 @@ class Images:
 class Shells:
 	pack_str = '''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'''
 
+============== my_base.py
+#-*- coding: UTF-8 -*-
+
+import time
+import tkinter as tk
+
+
+class SSHError(Exception):
+	''' SSH登录失败异常 '''
+	pass
+
+class ExecError(Exception):
+	''' SSH 执行失败异常 '''
+	pass
+
+
+class Handler(object):
+	""" 作为线程处理的基类 """
+	""" 使用__new__实现抽象单例 """
+	def __new__(cls, *args, **kwargs):
+		if not hasattr(cls, '_instance'):
+			cls._instance = super(Handler, cls).__new__(cls)
+		return cls._instance
+
+	def _enter(self):
+		self.__s_time = time.time()
+
+	def _exit(self):
+		self.__e_time = time.time()
+		self.__u_time = '%.3f' % (self.__e_time - self.__s_time)
+
+	def counter(self):
+		return self.__u_time
+
+	def stepper(self):
+		pass
+
+	def handler(self):
+		self._enter()
+		self.__result = self.stepper()
+		self._exit()
+
+	def result(self):
+		return self.__result
+
+
+class Pager(object):
+	frame = None
+	def __new__(cls, *args, **kwargs):
+		if not hasattr(cls, '_instance'):
+			cls._instance = super(Pager, cls).__new__(cls)
+		return cls._instance
+	
+	def _init(self):
+		self.frame = tk.LabelFrame(self.master, bg='Gray90')
+		self.frame.pack()
+
+	def pack(self):
+		self._init()
+		self.stepper()
+
+	def stepper(self):
+		pass
+
+	def destroy(self):
+		try:
+			self.frame.destroy()
+		except:
+			pass
+
+================ my_common.py
+#-*- coding: UTF-8 -*-
+
+import re
+import time
+import threading
+
+
+class Globals:
+	'''
+	静态全局变量
+	'''
+	@classmethod
+	def get_basedir(cls):
+		return 'C:\\Bingo\\Binlog'
+
+	@classmethod
+	def server_dir(cls):
+		return '/home/Bingo'
+
+	@classmethod
+	def title(cls):
+		return "主备工具 V1.0"
+
+	@classmethod
+	def font(cls):
+		return '微软雅黑'
+
+	@classmethod
+	def welcome(cls):
+		return ' ' * 60 + '【 欢迎使用主备工具 】'
+
+	@classmethod
+	def big_font(cls):
+		return '楷体'
+
+	@classmethod
+	def color(cls):
+		return 'SlateGray'
+
+	@classmethod
+	def bg_color(cls):
+		return 'Gray'
+
+	@classmethod
+	def package(cls):
+		return 'package.7z'
+
+	@classmethod
+	def binlog_sh(cls):
+		return 'get_binlog.sh'
+
+	@classmethod
+	def halog_sh(cls):
+		return 'get_halogs.sh'
+
+	@classmethod
+	def collect_state_sh(cls):
+		return 'collect_state.sh'
+
+	@classmethod
+	def label_bg(cls):
+		return 'Snow'
+
+	@classmethod
+	def enter_bg(cls):
+		return 'Gray70'
+
+	@classmethod
+	def enter_fg(cls):
+		return 'DarkGreen'
+
+	@classmethod
+	def leave_fg(cls):
+		return 'Black'
+
+	@classmethod
+	def leave_bg(cls):
+		return 'Gray'
+
+	@classmethod
+	def title(cls):
+		return '主备工具'
+
+
+class Common:
+	'''
+	公共方法
+	'''
+	@classmethod
+	def get_time(cls):
+		ct = time.time()
+		msec = (ct - int(ct)) * 1000
+		return '%s.%03d' % (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),msec)
+
+	@classmethod
+	def write_to_file(cls, filename, info):
+		try:
+			with open(filename, 'w') as f:
+				f.write(info)
+				return True
+		except:
+			return False
+
+	@classmethod
+	def create_thread(cls, func, args=()):
+		th=threading.Thread(target=func, args=args)
+		th.setDaemon(True)
+		th.start()
+
+	@classmethod
+	def is_ip(cls, ip):
+		p = re.compile('^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$')
+		if p.match(ip):
+			return True
+		else:
+			return False
+
+	@classmethod
+	def sleep(cls, sec):
+		time.sleep(sec)
+
+	@classmethod
+	def find_val_in_str(cls, in_str, key):
+		return re.findall(r'%s:.*' % (key), in_str)[0].split(':')[-1]
+
+
+class Cache:
+	'''
+	全局变量(动态内存)
+	'''
+	# exe文件路径
+	_localbasedir = None
+	# 图片image实例
+	_imginsdict = {}
+	# 登录成功的IP
+	_logon_dict = {}
+	# 登录IP对应的SSH和实例
+	_ssh_inst_dict = {}
+	# IP对应的SubLogin实例
+	_login_inst_dict = {}
+	# 屏幕大小
+	_screen_size = []
+	# 是否退出
+	_is_exit = False
+	# 信息栏实例 
+	_info_inst = None
+	# 成功上传完毕package的IP列表
+	_prepare_ip = []
+	# 各个IP的巡检状态结果
+	_ip_state = {}
+
+	@classmethod
+	def windows_size(cls, size=None):
+		if size:
+			cls._screen_size = size
+		else:
+			return cls._screen_size
+
+	@classmethod
+	def execute_dir(cls, dir=None):
+		if dir:
+			cls._localbasedir = dir
+		else:
+			return cls._localbasedir
+
+	@classmethod
+	def exit_signal(cls, exit=None):
+		if exit in [True, False]:
+			cls._is_exit = exit
+		else:
+			return cls._is_exit
+			
+	@classmethod
+	def image_instance(cls, **keyv):
+		for key in keyv:
+			cls._imginsdict[key] = keyv[key]
+
+	@classmethod
+	def get_image_instance(cls, key):
+		return cls._imginsdict[key]
+
+	@classmethod
+	def get_logon_info(cls):
+		return cls._logon_dict
+
+	@classmethod
+	def del_logon_info(cls, ip):
+		if ip == 'all':
+			cls._logon_dict = {}
+		elif ip in cls._logon_dict:
+			del cls._logon_dict[ip]
+
+	@classmethod
+	def add_logon_info(cls, ip, auth_list):
+		if ip not in cls._logon_dict:
+			cls._logon_dict[ip] = auth_list
+
+	@classmethod
+	def get_ssh_instance(cls, ip):
+		return cls._ssh_inst_dict[ip]
+
+	@classmethod
+	def add_ssh_instance(cls, ip, ssh_inst):
+		if ip not in cls._ssh_inst_dict:
+			cls._ssh_inst_dict[ip] = ssh_inst
+
+	@classmethod
+	def del_ssh_instance(cls, ip):
+		if ip == 'all':
+			cls._ssh_inst_dict = {}
+		elif ip in cls._ssh_inst_dict:
+			del cls._ssh_inst_dict[ip]
+
+	@classmethod
+	def infowin_inst(cls, info_inst=None):
+		if info_inst:
+			cls._info_inst = info_inst
+		else:
+			return cls._info_inst
+
+	@classmethod
+	def get_prepare_ip(cls):
+		return cls._prepare_ip
+
+
+	@classmethod
+	def add_prepare_ip(cls, ip):
+		if ip not in cls._prepare_ip:
+			cls._prepare_ip.append(ip)
+
+	@classmethod
+	def del_prepare_ip(cls, ip):
+		if ip == 'all':
+			cls._prepare_ip = []
+		elif ip in cls._prepare_ip:
+			cls._prepare_ip.remove(ip)
+
+	@classmethod
+	def get_ip_state_dict(cls):
+		return cls._ip_state
+
+	@classmethod
+	def set_ip_state_dict(cls, in_dict):
+		ip, = in_dict
+		value, = in_dict.values()
+		cls._ip_state[ip] = value
+
+========== my_setting.py
+#-*- coding: UTF-8 -*-
+
+class Settings():
+	def __init__(self):
+		self.default_user_info = ['ubp', 'eLTE@com123', 'eLTE@com']
+
+	def get_passwd_info(self):
+		return self.default_user_info
+
+============ my_module.py
+#-*- coding: UTF-8 -*-
+
+import tkinter as tk
+from my_common import Globals
+
+
+class ProgressBar:
+	'''比例条'''
+	def __init__(self, master, name, width=32, row=1, column=0):
+		self.master = master
+		self.name = name
+		self.width = width
+		self.row = row
+		self.column = column
+		self.namelab = None
+		self.bglab = None
+		self.fglab = None
+		self.value = 0
+		self.pack()
+
+	def pack(self):
+		self.namelab = tk.Label(self.master, text=self.name)
+		self.namelab.grid(row=self.row, column=self.column, padx=5, pady=5)
+		self.bglab = tk.Label(self.master, relief='solid', bd=1, \
+			width=self.width, bg='snow', anchor=tk.E)
+		self.fglab = tk.Label(self.master, relief='solid', bd=1)
+		self.bglab.grid(row=self.row, column=self.column + 1, sticky=tk.W)
+		self.fglab.grid(row=self.row, column=self.column + 1, sticky=tk.W)
+
+	def update(self, value, color=False):
+		if self.value == value:
+			return
+		self.value = value
+		sub = int(self.width * value)
+		percent = '%s%%' % (value * 100)
+		fg_color = 'PaleTurquoise'
+		if value > 0.5:
+			self.bglab['text'] = ''
+			self.fglab['text'] = percent
+		else:
+			self.bglab['text'] = ''.join([str(percent), ' ' * 6])
+			self.fglab['text'] = ''
+		if color:
+			if 0.0 <= value < 0.3:
+				fg_color = 'PaleTurquoise'
+			elif 0.3 <= value < 0.5:
+				fg_color = 'Turquoise'
+			elif 0.5 <= value < 0.7:
+				fg_color = 'Gold'
+			elif 0.7 <= value < 0.85:
+				fg_color = 'Coral'
+			elif 0.85 <= value < 0.95:
+				fg_color = 'OrangeRed'
+			elif 0.95 <= value <= 1.0:
+				fg_color = 'Red3'
+		self.fglab['width'] = sub
+		self.fglab['bg'] = fg_color
+
+	def destroy(self):
+		self.namelab.destroy()
+		self.bglab.destroy()
+		self.fglab.destroy()
+
+
+class InfoWindow(object):
+	''' 消息提示栏 '''
+	def __init__(self, master):
+		self.master = master
+		self.font = Globals.font()
+		self.tag_i = 0
+		self.init()
+
+	def init(self):
+		self.infotext = tk.Text(self.master, font=('-*-%s-*-*-*--*-120-*')%(self.font),\
+			bd=2, relief='ridge', fg='Blue', bg='AliceBlue', height=9, width=110)
+		self.infotext.insert(tk.END, Globals.welcome())
+		self.infotext['stat'] = 'disabled'
+		self.infotext.pack()
+
+	def tell(self, info, color):
+		self.tag_i += 1
+		self.infotext['stat'] = 'normal'
+		self.infotext.insert(tk.END, info)
+		line = self.infotext.index(tk.END)
+		line = int(line.split('.')[0]) - 1
+		self.infotext.tag_add('BINGO%s' % (self.tag_i),'%s.0' % (line),'%s.end' % (line))
+		self.infotext.tag_config('BINGO%s' % (self.tag_i), foreground=color)
+		self.infotext.see(tk.END)
+		self.infotext['stat'] = 'disabled'
+
+
+class LabelButton():
+	''' Radiobutton实现的侧边菜单栏 '''
+	def __init__(self, master, seq, intvar, text, command):
+		self.btn_seq = seq
+		self.btn_text = text
+		self.command = command
+		self.font = Globals.big_font()
+		self.font_size = 22
+		self.button = tk.Radiobutton(master, selectcolor=Globals.label_bg(), 
+			fg='Black', bg='PaleTurquoise4', variable=intvar, width=20, bd=0, \
+			indicatoron=0, value=seq, text=text, font=('-*-%s-*-*-*--*-%s0-*') % \
+			(self.font, self.font_size), command=self.click)
+		self.button.bind("<Enter>", self.enter)
+		self.button.bind("<Leave>", self.leave)
+
+	def enter(self, event=None):
+		self.button['fg'] = 'Brown1' #'Gray90'
+		self.button['bg'] = 'PaleTurquoise3'
+
+	def leave(self, event=None):
+		self.button['fg'] = 'Black'
+		self.button['bg'] = 'PaleTurquoise4'
+
+	def pack(self):
+		self.button.pack(ipady=21)
+
+	def click(self, event=None):
+		self.command(self.btn_seq)
+
+
+class SubLogin():
+	''' 登录子界面 '''
+	def __init__(self, gui, sequence, login_instance):
+		self.gui = gui
+		self.sequence = sequence
+		self.login_instance = login_instance
+		self.var_user = tk.StringVar()
+		self.var_upwd = tk.StringVar()
+		self.var_rpwd = tk.StringVar()
+		self.tig_color = ['Snow', 'Green', 'DimGray', 'Red']
+		self.font = Globals.font()
+		self.init()
+
+	def init(self):
+		self.taglab = tk.Label(self.gui, text='●', font=('-*-%s-*-*-*--*-180-*')\
+			%(self.font), fg=self.tig_color[0])
+		self.ip_en = tk.Entry(self.gui, relief='groove', width=15, bg='white',\
+			font=('-*-%s-*-*-*--*-140-*')%(self.font))
+		self.user_en = tk.Entry(self.gui, relief='groove', width=10, bg='white',\
+			font=('-*-%s-*-*-*--*-140-*')%(self.font), textvariable=self.var_user)
+		self.upwd_en = tk.Entry(self.gui, relief='groove', show='*', width=15,bg='white',\
+			font=('-*-%s-*-*-*--*-140-*')%(self.font), textvariable=self.var_upwd)
+		self.rpwd_en = tk.Entry(self.gui, relief='groove', show='*', width=15,bg='white',\
+			font=('-*-%s-*-*-*--*-140-*')%(self.font), textvariable=self.var_rpwd)
+		self.delbtn = tk.Button(self.gui, text='▬', font=('-*-%s-*-*-*--*-140-*')\
+			% (self.font), bd=0, command=self.destroy)
+
+	def pack(self):
+		self.taglab.grid(row=self.sequence+1, column=0, padx=5, ipady=5)
+		self.ip_en.grid(row=self.sequence+1, column=1, padx=8, ipady=5)
+		self.user_en.grid(row=self.sequence+1, column=2, padx=8, ipady=5)
+		self.upwd_en.grid(row=self.sequence+1, column=3, padx=8, ipady=5)
+		self.rpwd_en.grid(row=self.sequence+1, column=4, padx=8, ipady=5)
+		if self.sequence != 1:
+			self.delbtn.grid(row=self.sequence+1, column=5, padx=5)
+		self.login_instance[self.sequence] = self
+
+	def destroy(self):
+		self.taglab.grid_remove()
+		self.ip_en.grid_remove()
+		self.user_en.grid_remove()
+		self.upwd_en.grid_remove()
+		self.rpwd_en.grid_remove()
+		if self.sequence != 1:
+			self.delbtn.grid_remove()
+		del self.login_instance[self.sequence]
+
+	def see_passwd(self,onoff):
+		if onoff == 'ON':
+			self.upwd_en['show'] = ''
+			self.rpwd_en['show'] = ''
+		else:
+			self.upwd_en['show'] = '*'
+			self.rpwd_en['show'] = '*'
+
+	def set_defaults(self, default_info):
+		''' 设置默认用户和密码 '''
+		self.var_user.set(default_info[0])
+		self.var_upwd.set(default_info[1])
+		self.var_rpwd.set(default_info[2])
+
+	def tig_login(self,status):
+		if status == 'DFLT':
+			index = 0
+		elif status == 'SUCC':
+			index = 1
+		elif status == 'LGING':
+			index = 2
+		elif status == 'FAIL':
+			index = 3
+		else:return
+		self.taglab['fg'] = self.tig_color[index] 
+
+========== my_ssh.py
+#-*- coding: UTF-8 -*-
+
+import os
+#import traceback
+import paramiko
+from my_base import SSHError
+from my_message import WinMsg,GuiTig
+
+
+class SSH(object):
+	''' paramiko ssh登录服务类 '''
+	def __init__(self, ip, user, upwd, rpwd):
+		self.host = ip
+		self.user = user
+		self.pswd = upwd
+		self.rootpwd = rpwd
+		self.port = 22
+		self._ssh_fd = ''
+		self.err_info = ''
+
+	def get_ip(self):
+		return self.ip
+
+	def get_user(self):
+		return self.user
+
+	def get_user_passwd(self):
+		return self.upwd
+
+	def get_root_passwd(self):
+		return self.rpwd
+
+	def get_error_info(self):
+		return self.err_info
+
+	def exec_continue(self, cmd, root=False):
+		if root:
+			cmd = '''echo "%s" |su - -c "%s"'''%(self.rootpwd, cmd)
+		#print('cmd=',cmd)
+		try:
+			a, b, c = self._ssh_fd.exec_command(cmd)
+			return a, b, False
+		except Exception as e:
+			#print('[ERROR] continue exec fail: %s\n%s'%(cmd,str(e)))
+			self.err_info = str(e)
+			return False, False, str(e)
+
+	def exec_cmd(self,cmd,root=False):
+		if root:
+			cmd = '''echo "%s" |su - -c "%s"'''%(self.rootpwd, cmd)
+		try:
+			self._ssh_fd = paramiko.SSHClient()
+			self._ssh_fd.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+			self._ssh_fd.connect(self.host, username=self.user, password=self.pswd)
+			a, b, c = self._ssh_fd.exec_command(cmd)
+			return a, b, False
+		except Exception as e:
+			#print('[ERROR] exec fail: %s\n%s'%(cmd,str(e)))
+			self.err_info = str(e)
+			return False, False, str(e)
+
+	def close(self):
+		return self._ssh_fd.close()
+
+	def upload(self, local_path, server_path):
+		try:
+			t = paramiko.Transport((self.host, self.port))
+			t.connect(username=self.user, password=self.pswd)
+			sftp = paramiko.SFTPClient.from_transport(t)
+			sftp.put(local_path, server_path)
+			t.close()
+			return True
+		except Exception as e:
+			self.err_info = str(e)
+			return False
+
+	def download(self, server_path, local_path):
+		try:
+			t = paramiko.Transport((self.host, self.port))
+			t.connect(username=self.user, password=self.pswd)
+			sftp = paramiko.SFTPClient.from_transport(t)
+			sftp.get(server_path, local_path)
+			t.close()
+			return True
+		except Exception as e:
+			print(e)
+			self.err_info = str(e)
+			return False
+
+
+class SSHUtil:
+	@classmethod
+	def _login(cls, ssh_inst, login_inst, root=False):
+		if root:
+			user, tig_en = 'root', login_inst.rpwd_en
+		else:
+			user, tig_en = ssh_inst.get_user(), login_inst.upwd_en
+		out = ssh_inst.exec_cmd('whoami', root)[1]
+		try:
+			out = out.read().strip()
+			out = str(out, encoding='utf-8')
+			if user != out:
+				raise SSHError('bad passwd')
+		except Exception as e:
+			print(traceback.format_exc())
+			ssh_inst.close()
+			GuiTig.change_color_tig(tig_en)
+			WinMsg.error('密码错误')
+			return False
+		else:
+			return True
+
+	@classmethod
+	def user_login(cls, ssh_inst, login_inst):
+		return cls._login(ssh_inst, login_inst)
+
+	@classmethod
+	def root_login(cls, ssh_inst, login_inst):
+		return cls._login(ssh_inst, login_inst, root=True)
+
+	@classmethod
+	def upload_file(cls, ssh_inst, local, remote):
+		path = os.path.split(remote)[0]
+		ssh_inst.exec_continue('mkdir -p %s;chmod 777 %s' % (path, path), root=True)
+		return ssh_inst.upload(local, remote)
+
+	@classmethod
+	def exec_info(cls, ssh_inst, cmd, root=False):
+		try:
+			out = ssh_inst.exec_continue(cmd, root)[1]
+			out = out.read().strip()
+			out = str(out, encoding='utf-8')
+			return out
+		except:
+			return None
+
+	@classmethod
+	def exec_ret(cls, ssh_inst, cmd, root=False):
+		try:
+			out = ssh_inst.exec_continue(cmd, root)[1]
+			out = out.channel.recv_exit_status()
+			return out
+		except:
+			return -1
+
+	@classmethod
+	def template_shell_and_download(cls, ssh_inst, progress, shell_path,\
+	local_dir, root=False):
+		''' 
+		执行脚本，获取脚本打印，
+		然后下载其打印内容到本地目录 
+		'''
+		try:
+			out = ssh_inst.exec_continue(shell_path, root)[1]
+			out = out.read().strip()
+			out = str(out, encoding='utf-8')
+			if not out:
+				return False
+			#print('out=',out)
+			local_path = '\\'.join([local_dir, os.path.split(out)[1]])
+			progress.update(0.8)
+			if ssh_inst.download(out, local_path):
+				progress.update(1)
+				return True
+			else:
+				raise SSHError('download')
+		except:
+			#print(traceback.format_exc())
+			return False
+
+
+if __name__ == '__main__':
+	ssh = SSH('10.160.154.120', 'eCommon', 'eLTE@com123', 'eLTE@com')
+	b = ssh.exec_cmd("whoami", root=True)[1]
+	print(b.channel.recv_exit_status(), b.read().strip())
+
+============= my_main.py
+#-*- coding: UTF-8 -*-
+
+from PIL import Image, ImageTk
+from my_common import Globals,Cache
+from my_view import GuiLogin,GuiMain
+
+
+def LoginInit():
+	login = GuiLogin()
+	# 初始化屏幕大小
+	#Cache.windows_size(size=list(login.maxsize()))
+
+	imgdir = '\\'.join([Globals.get_basedir(), 'image'])
+	imgpath = '\\'.join([imgdir, 'item.ico'])
+	img = ImageTk.PhotoImage(image=Image.open(imgpath))
+	Cache.image_instance(ICO=img)
+	imgpath = '\\'.join([imgdir, 'eye.png'])
+	img = ImageTk.PhotoImage(image=Image.open(imgpath))
+	Cache.image_instance(EYE=img)
+	imgpath = '\\'.join([imgdir, 'add.png'])
+	img = ImageTk.PhotoImage(image=Image.open(imgpath))
+	Cache.image_instance(ADD=img)
+	imgpath = '\\'.join([imgdir, 'set.png'])
+	img = ImageTk.PhotoImage(image=Image.open(imgpath))
+	Cache.image_instance(SET=img)
+	imgpath = '\\'.join([imgdir, 'head.jpg'])
+	img = ImageTk.PhotoImage(image=Image.open(imgpath))
+	Cache.image_instance(HEAD=img)
+
+	login.init_frame()
+	login.pack_frame()
+
+	login.protocol("WM_DELETE_WINDOW", login.close_window)
+	login.mainloop()
+
+
+def MainInit():
+	main = GuiMain()
+	main.init_frame()
+	main.pack_frame()
+	main.protocol("WM_DELETE_WINDOW", main.close_window)
+	main.mainloop()
+
+
+
+
+
+
 
 
 
