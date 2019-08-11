@@ -716,8 +716,119 @@ class PageDealer(object):
 		# 定时收集服务器状态并显示 
 		Common.create_thread(func=EnvUtil.collect_state_thread, args=(self.fill_state_data,))
 
+============== my_message.py
+#-*- coding: UTF-8 -*-
+
+import time
+import tkinter.messagebox
+from my_common import Common,Cache
 
 
+class Tell:
+	@classmethod
+	def tell_info(cls, info, level='INFO'):
+		infowin_inst = Cache.infowin_inst()
+		if not infowin_inst:
+			return
+		if level == 'WARN':
+			color = 'DarkOrange'
+		elif level == 'INFO':
+			color = 'MediumSeaGreen'
+		elif level == 'ERROR':
+			color = 'red'
+		elif level == 'TIG':
+			color = 'Purple'
+		else:
+			color = 'Blue'
+		info = "\n%s [%s]: %s" % (Common.get_time(), level.upper(), str(info))
+		infowin_inst.tell(info, color)
+
+
+class WinMsg:
+	@classmethod
+	def info(cls, info):
+		tkinter.messagebox.showinfo('Information', info)
+
+	@classmethod
+	def error(cls, info):
+		tkinter.messagebox.showerror('Error', info)
+
+	@classmethod
+	def ask(cls, info):
+		return tkinter.messagebox.askokcancel('Ask', info)
+
+	@classmethod
+	def warn(cls, info):
+		tkinter.messagebox.showwarning('Warn', info)
+
+
+class GuiTig:
+	@classmethod
+	def change_color_tig(cls, instance, which='bg', backcolor='White'):
+		Common.create_thread(cls.update_color, args=(instance, which, backcolor))
+
+	@classmethod
+	def update_color(cls,instance, who='bg', backcolor='White'):
+		sleep = 0.4
+		instance[who] = 'red'
+		time.sleep(sleep)
+		instance[who] = 'Gold'
+		time.sleep(sleep)
+		instance[who] = 'red'
+		time.sleep(sleep)
+		instance[who] = 'Gold'
+		time.sleep(sleep)
+		instance[who] = 'red'
+		time.sleep(sleep)
+		instance[who] = 'Gold'
+		time.sleep(sleep)
+		instance[who] = backcolor
+
+
+class Checker:
+	@classmethod
+	def check_input_ip(cls, ip=None, instance=None):
+		if not ip:
+			WinMsg.warn('请输入服务器IP地址')
+			GuiTig.change_color_tig(instance)
+			return False
+		elif not Common.is_ip(ip):
+			WinMsg.warn('请输入正确的IP地址')
+			GuiTig.change_color_tig(instance)
+			return False
+		elif ip in Cache.get_logon_info():
+			WinMsg.warn('%s已经登录，不能重复登录')
+			GuiTig.change_color_tig(instance)
+			return False
+		return True
+
+	@classmethod
+	def check_input_user(cls, user=None, instance=None):
+		if not user:
+			WinMsg.warn('请输入用户名')
+			GuiTig.change_color_tig(instance)
+			return False
+		return True
+
+	@classmethod
+	def check_input_upwd(cls, upwd=None, instance=None):
+		if not upwd:
+			WinMsg.warn('请输入用户密码')
+			GuiTig.change_color_tig(instance)
+			return False
+		return True
+
+	@classmethod
+	def check_input_rpwd(cls, rpwd=None, instance=None):
+		if not rpwd:
+			WinMsg.warn('请输入root密码')
+			GuiTig.change_color_tig(instance)
+			return False
+		return True
+
+======= my_images.py
+class Shells:
+	pack_str = '''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'''
 
 
 
