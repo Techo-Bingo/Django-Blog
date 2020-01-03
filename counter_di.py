@@ -129,5 +129,15 @@ if __name__ == '__main__':
     exit_delay(1)
 
 
+{
+  "Group-A": {
+      "name_a": "张三",
+      "name_b": "李四"
+  },
+    
+  "Group-B": {
+    "name_c": "王五"
+  }
+}
 
 
