@@ -8,8 +8,14 @@ import pandas as pd
 from decimal import Decimal
 
 g_excel_name = 'DTS.xlsx'
+g_group_excel = 'Group.xlsx'
 g_member_cnf = 'member.json'
+# 成员配置文件数据
 g_member_dict = {}
+# 团队所有成员
+g_team_mamber = {}
+g_di_level = ['致命', '严重', '一般', '提示']
+g_level_map = {'致命': '10', '严重': '3', '一般': '1', '提示': '0.1'}
 
 
 def exit_delay(t=3):
@@ -65,47 +71,52 @@ def member_parse():
         Logger.error("解析成员列表文件失败 （成员列表文件格式不对?）")
         exit_delay()
     # Logger.info(g_member_dict)
+    for _, members in g_member_dict.items():
+        for en, ch in members.items():
+            g_team_mamber[en] = ch
+    Logger.info(g_team_mamber)
+
+
+def group_counter(writer, group, members, group_dts):
+    group_dts.to_excel(excel_writer=writer, sheet_name=group, index=False)
+    group_di = Decimal(0)
+    count_list = []
+    for level in g_di_level:
+        count = len(group_dts[group_dts['严重程度'] == level])
+        group_di += Decimal(count) * Decimal(g_level_map[level])
+        count_list.append(count)
+    # print('%s  DI: %s' % (group, group_di))
+    return count_list + [group_di]
 
 
 def count_di():
     # python 浮点运算有损，不准确，使用Decimal计算
-    level_map = {'致命': '10', '严重': '3', '一般': '1', '提示': '0.1'}
-    dts_count = 0
-    total_di = 0
-    di_dict = {}
+    total_data = {
+        '-': g_di_level + ['总DI']
+    }
     dts_data = pd.read_excel(g_excel_name)
-    print('------- 小组 -------')
+    writer = pd.ExcelWriter(g_group_excel)
     for group, members in g_member_dict.items():
-        group_di = 0
-        for en, ch in members.items():
-            # 获取组员dts列表
-            member_dts = dts_data.loc[dts_data['当前处理人'] == en]
-            if member_dts.empty:
-                continue
-            # TODO 写到另一个excel中
-            di_levels = member_dts['严重程度']
-            for di_lvl in di_levels:
-                # Logger.info("%s %s %s" % (group, ch, di_lvl))
-                _di = Decimal(level_map[di_lvl])
-                if ch in di_dict:
-                    _new_di = di_dict[ch] + _di
-                    di_dict[ch] = _new_di
-                else:
-                    di_dict[ch] = _di
-                group_di += _di
-                total_di += _di
-                dts_count += 1
-        print("{:12}: {}".format(group+' DI', group_di))
-    print('------- 团队 -------')
-    print("{:8}: {}".format("团队总DI", total_di))
-    print("{:8}: {}".format("DTS总个数", dts_count))
-    sort_dict = sorted(di_dict.items(), key=lambda x: x[1], reverse=True)
-    print("----- DI排行榜 -----")
-    for member in sort_dict:
-        print("{:6}: {}".format(member[0], member[1]))
+        # 获取成员DTS列表并排序
+        group_dts = dts_data[dts_data['当前处理人'].isin(members)].sort_values(by=['当前处理人', '严重程度'])
+        total_data[group] = group_counter(writer, group, members, group_dts)
+    # 汇总各组DI情况
+    total_data_df = pd.DataFrame(total_data)
+    total_data_df.to_excel(writer, sheet_name='汇总', index=False)
+    writer.save()
+    writer.close()
+
+    '''
+    for member in g_team_mamber:
+
+        member_dts = dts_data[dts_data['当前处理人'].str.contains(member)]
+
+        print(member_dts)
+    '''
 
 
 def main():
+
     check_env()
 
     member_parse()
@@ -115,7 +126,7 @@ def main():
 
 if __name__ == '__main__':
     main()
-    exit_delay(5)
+    exit_delay(1)
 
 
 
