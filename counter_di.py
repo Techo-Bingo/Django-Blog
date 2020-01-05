@@ -163,5 +163,25 @@ if __name__ == '__main__':
     main()
     exit_delay(0)
 
-
+{
+	"MDC": [
+		"eMDC-V100C200B300",
+		"eMDC-V100C200B301",
+		"eMDC-V100C200B302",
+		"eMDC-V100C200B303"
+	],
+	
+	"MRS": [
+		"eMRS-V100C200B300",
+		"eMRS-V100C200B301",
+		"eMRS-V100C200B302",
+		"eMRS-V100C200B303"
+	],
+	
+	"UDC": [
+		"eUDC-V100C200B300",
+		"eUDC-V100C200B301",
+		"eUDC-V100C200B302"		
+	]
+}
 
