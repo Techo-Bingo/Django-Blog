@@ -6,8 +6,8 @@ import json
 import pandas as pd
 from decimal import Decimal
 
-g_excel_name = 'DTS.xlsx'
-g_group_excel = 'Group.xlsx'
+g_in_excel = 'DTS-IN.xlsx'
+g_out_excel = 'DTS-OUT.xlsx'
 g_member_cnf = 'member.json'
 g_version_cnf = 'version.json'
 # 团队所有成员
@@ -28,7 +28,6 @@ def exit_delay(t=3):
 
 
 class Logger:
-
     @classmethod
     def get_time(cls):
         ct = time.time()
@@ -60,8 +59,8 @@ class JSONParser:
 
 
 def check_env():
-    if not os.path.isfile(g_excel_name):
-        Logger.error("Excel文件不存在: %s" % g_excel_name)
+    if not os.path.isfile(g_in_excel):
+        Logger.error("Excel文件不存在: %s" % g_in_excel)
         exit_delay()
 
     if not os.path.isfile(g_member_cnf):
@@ -95,14 +94,14 @@ def version_parse():
 
 
 def count_di():
-    dts_data = pd.read_excel(g_excel_name)
+    dts_data = pd.read_excel(g_in_excel)
     # 获取指定版本号对应的数据帧
     dts_data = dts_data[dts_data['产品B版本号'].isin(g_version_list)]
     # 用于统计汇总界面信息的数据
     total_data = {'-': g_di_level + ['归档DI', '小组总DI']}
     # 用于统计测试回归阶段的数据帧
     all_regress_dts = None
-    writer = pd.ExcelWriter(g_group_excel)
+    writer = pd.ExcelWriter(g_out_excel)
     for group, members in g_member_dict.items():
         group_dts = None
         for en, ch in members.items():
@@ -113,7 +112,7 @@ def count_di():
             group_dts = member_dts if group_dts is None else pd.concat([group_dts, member_dts])
             # 获取测试回归阶段的DTS
             regress_dts = dts_data.loc[((dts_data['问题单修改人'] == en) |
-                                       (dts_data['问题单修改人'].str.contains('%s,' % en))) &
+                                        (dts_data['问题单修改人'].str.contains('%s,' % en))) &
                                        (dts_data['当前状态'].isin(g_regress_list))]
             all_regress_dts = regress_dts if all_regress_dts is None else pd.concat([all_regress_dts, regress_dts])
         # 对组DTS排序
@@ -162,26 +161,4 @@ def main():
 if __name__ == '__main__':
     main()
     exit_delay(0)
-
-{
-	"MDC": [
-		"eMDC-V100C200B300",
-		"eMDC-V100C200B301",
-		"eMDC-V100C200B302",
-		"eMDC-V100C200B303"
-	],
-	
-	"MRS": [
-		"eMRS-V100C200B300",
-		"eMRS-V100C200B301",
-		"eMRS-V100C200B302",
-		"eMRS-V100C200B303"
-	],
-	
-	"UDC": [
-		"eUDC-V100C200B300",
-		"eUDC-V100C200B301",
-		"eUDC-V100C200B302"		
-	]
-}
 
